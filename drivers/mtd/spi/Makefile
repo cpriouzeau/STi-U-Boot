@@ -6,6 +6,7 @@
 #
 
 obj-$(CONFIG_DM_SPI_FLASH) += sf-uclass.o
+obj-$(CONFIG_STM) += stm_fsm_spi/
 
 ifdef CONFIG_SPL_BUILD
 obj-$(CONFIG_SPL_SPI_LOAD)	+= spi_spl_load.o

@@ -899,6 +899,9 @@ config TARGET_THUNDERX_88XX
 	select OF_CONTROL
 	select SYS_CACHE_SHIFT_7
 
+config ARCH_STI
+	bool "Support STMicroelectronics SoCs"
+
 endchoice
 
 source "arch/arm/mach-at91/Kconfig"
@@ -1024,6 +1027,7 @@ source "board/spear/spear320/Kconfig"
 source "board/spear/spear600/Kconfig"
 source "board/spear/x600/Kconfig"
 source "board/st/stv0991/Kconfig"
+source "board/st/stxh410_b2260/Kconfig"
 source "board/sunxi/Kconfig"
 source "board/syteco/zmx25/Kconfig"
 source "board/tcl/sl50/Kconfig"

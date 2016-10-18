@@ -1,0 +1,107 @@
+if ARCH_STI
+
+config SYS_VENDOR
+	default "st"
+
+config STM
+	bool
+	default y
+
+choice
+	prompt "Select Boot Scheme"
+	default USE_SBL_SCHEME
+
+config USE_SBL_SCHEME
+	bool
+	prompt "Compile U-boot as Secondary loader"
+
+endchoice
+
+config BOARDREV
+	string
+	default "1" if BOARD_REV_A
+	default "2" if BOARD_REV_B
+	default "3" if BOARD_REV_C
+	default "4" if BOARD_REV_D
+	default "5" if BOARD_REV_E
+
+config BOARDREV_STRING
+	string
+	default "reva" if BOARD_REV_A
+	default "revb" if BOARD_REV_B
+	default "revc" if BOARD_REV_C
+	default "revd" if BOARD_REV_D
+	default "reve" if BOARD_REV_E
+
+config STM_STXH410
+	bool
+
+config STM_FAMILY_STXH410
+	bool
+
+config STM_B2260
+	bool
+
+choice
+	prompt "STMicroelectronics board select"
+
+config TARGET_B2260_STXH410
+	bool "STM B2260 board with STXH410 SoC"
+	select CPU_V7
+	select STM_STXH410
+	select STM_FAMILY_STXH410
+	select STM_B2260
+
+endchoice
+
+if STM_B2260
+choice
+	prompt "Select Board Revision"
+	depends on !USE_SBL_SCHEME
+
+config BOARD_REV_A
+	bool
+	prompt "Board Revision A"
+
+config BOARD_REV_B
+	bool
+	prompt "Board Revision B"
+
+config BOARD_REV_C
+	bool
+	prompt "Board Revision C"
+
+config BOARD_REV_D
+	bool
+	prompt "Board Revision D"
+
+config BOARD_REV_E
+	bool
+	prompt "Board Revision E"
+
+endchoice
+endif
+
+choice
+	prompt "Select Boot Device"
+
+config SYS_BOOT_FROM_SDUSB
+	bool
+	prompt "Boot Using sd/usb" if STM_B2260
+
+endchoice
+
+if STM_B2260
+
+config SYS_BOARD
+	default "stxh410_b2260" if STM_B2260
+
+config SYS_CONFIG_NAME
+	default "stxh410_b2260" if STM_B2260
+
+config SYS_SOC
+	default "stxh410" if STM_STXH410
+
+endif
+
+endif

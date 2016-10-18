@@ -31,6 +31,12 @@
 # define CONFIG_ENV_SPI_MODE	SPI_MODE_3
 #endif
 
+#ifdef CONFIG_STM_FSM_SPI_FLASH
+extern struct spi_flash * spi_fsm_flash_probe( unsigned int bus,
+	unsigned int cs,
+	unsigned int max_hz,
+	unsigned int spi_mode);
+#endif
 #ifdef CONFIG_ENV_OFFSET_REDUND
 static ulong env_offset		= CONFIG_ENV_OFFSET;
 static ulong env_new_offset	= CONFIG_ENV_OFFSET_REDUND;
@@ -67,11 +73,23 @@ int saveenv(void)
 #else
 
 	if (!env_flash) {
+#ifdef CONFIG_STM_FSM_SPI_FLASH /* For ST we use FSM SPI controller
+		which is not like a "traditional" SPI controller "*/
+		env_flash = spi_fsm_flash_probe(CONFIG_ENV_SPI_BUS,
+			CONFIG_ENV_SPI_CS,
+			CONFIG_ENV_SPI_MAX_HZ, CONFIG_ENV_SPI_MODE);
+#else
 		env_flash = spi_flash_probe(CONFIG_ENV_SPI_BUS,
 			CONFIG_ENV_SPI_CS,
 			CONFIG_ENV_SPI_MAX_HZ, CONFIG_ENV_SPI_MODE);
+#endif
 		if (!env_flash) {
+#ifdef CONFIG_STM_FSM_SPI_FLASH /* For ST we use FSM SPI controller
+		which is not like a "traditional" SPI controller "*/
+			set_default_env("!spi_fsm_flash_probe() failed");
+#else
 			set_default_env("!spi_flash_probe() failed");
+#endif
 			return 1;
 		}
 	}
@@ -166,13 +184,22 @@ void env_relocate_spec(void)
 		goto out;
 	}
 
+#ifdef CONFIG_STM_FSM_SPI_FLASH /* For ST we use FSM SPI controller
+		which is not like a "traditional" SPI controller "*/
+	env_flash = spi_fsm_flash_probe(CONFIG_ENV_SPI_BUS, CONFIG_ENV_SPI_CS,
+			CONFIG_ENV_SPI_MAX_HZ, CONFIG_ENV_SPI_MODE);
+	if (!env_flash) {
+		set_default_env("!spi_fsm_flash_probe() failed");
+		goto out;
+	}
+#else
 	env_flash = spi_flash_probe(CONFIG_ENV_SPI_BUS, CONFIG_ENV_SPI_CS,
 			CONFIG_ENV_SPI_MAX_HZ, CONFIG_ENV_SPI_MODE);
 	if (!env_flash) {
 		set_default_env("!spi_flash_probe() failed");
 		goto out;
 	}
-
+#endif
 	ret = spi_flash_read(env_flash, CONFIG_ENV_OFFSET,
 				CONFIG_ENV_SIZE, tmp_env1);
 	if (ret) {
@@ -257,6 +284,16 @@ int saveenv(void)
 #else
 
 	if (!env_flash) {
+#ifdef CONFIG_STM_FSM_SPI_FLASH /* For ST we use FSM SPI controller
+		which is not like a "traditional" SPI controller "*/
+		env_flash = spi_fsm_flash_probe(CONFIG_ENV_SPI_BUS,
+			CONFIG_ENV_SPI_CS,
+			CONFIG_ENV_SPI_MAX_HZ, CONFIG_ENV_SPI_MODE);
+		if (!env_flash) {
+			set_default_env("!spi_fsm_flash_probe() failed");
+			return 1;
+		}
+#else
 		env_flash = spi_flash_probe(CONFIG_ENV_SPI_BUS,
 			CONFIG_ENV_SPI_CS,
 			CONFIG_ENV_SPI_MAX_HZ, CONFIG_ENV_SPI_MODE);
@@ -264,6 +301,7 @@ int saveenv(void)
 			set_default_env("!spi_flash_probe() failed");
 			return 1;
 		}
+#endif
 	}
 #endif
 
@@ -326,6 +364,17 @@ void env_relocate_spec(void)
 	char *buf = NULL;
 
 	buf = (char *)memalign(ARCH_DMA_MINALIGN, CONFIG_ENV_SIZE);
+#ifdef CONFIG_STM_FSM_SPI_FLASH /* For ST we use FSM SPI controller
+		which is not like a "traditional" SPI controller "*/
+	env_flash = spi_fsm_flash_probe(CONFIG_ENV_SPI_BUS, CONFIG_ENV_SPI_CS,
+			CONFIG_ENV_SPI_MAX_HZ, CONFIG_ENV_SPI_MODE);
+	if (!env_flash) {
+		set_default_env("!spi_fsm_flash_probe() failed");
+		if (buf)
+			free(buf);
+		return;
+	}
+#else
 	env_flash = spi_flash_probe(CONFIG_ENV_SPI_BUS, CONFIG_ENV_SPI_CS,
 			CONFIG_ENV_SPI_MAX_HZ, CONFIG_ENV_SPI_MODE);
 	if (!env_flash) {
@@ -334,7 +383,7 @@ void env_relocate_spec(void)
 			free(buf);
 		return;
 	}
-
+#endif
 	ret = spi_flash_read(env_flash,
 		CONFIG_ENV_OFFSET, CONFIG_ENV_SIZE, buf);
 	if (ret) {

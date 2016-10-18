@@ -68,6 +68,14 @@ struct arch_global_data {
 #if defined(CONFIG_FSL_LSCH3) && defined(CONFIG_SYS_FSL_HAS_DP_DDR)
 	unsigned long mem2_clk;
 #endif
+
+#if defined(CONFIG_STM)			/* For STMicroelectronics' SoCs */
+	unsigned long	stm_devid;	/* the device ID of the SoC */
+	unsigned long	stm_uart_frq;	/* frequency of the UART (in Hertz) */
+	unsigned long	stm_ssc_frq;	/* frequency of the SSC  (in Hertz) */
+	unsigned long	stm_comm_frq;	/* COMM clock feequency  (in Hertz) */
+	unsigned long	stm_sbc_comm_frq; /* SBC_COMM clock feequency  (in Hertz) */
+#endif /* CONFIG_STM */
 };
 
 #include <asm-generic/global_data.h>

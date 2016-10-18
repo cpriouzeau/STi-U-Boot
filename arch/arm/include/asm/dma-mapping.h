@@ -16,11 +16,15 @@ enum dma_data_direction {
 	DMA_FROM_DEVICE		= 2,
 };
 
+#ifndef CONFIG_DMA_COHERENT
 static inline void *dma_alloc_coherent(size_t len, unsigned long *handle)
 {
 	*handle = (unsigned long)memalign(ARCH_DMA_MINALIGN, len);
 	return (void *)*handle;
 }
+#else
+void *dma_alloc_coherent(size_t len, unsigned long *handle);
+#endif
 
 static inline void dma_free_coherent(void *addr)
 {

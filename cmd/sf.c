@@ -15,6 +15,9 @@
 #include <spi_flash.h>
 #include <jffs2/jffs2.h>
 #include <linux/mtd/mtd.h>
+#ifdef CONFIG_STM_FSM_SPI_FLASH /* For ST we use FSM SPI controller */
+#include <stm_spi_fsm.h>
+#endif
 
 #include <asm/io.h>
 #include <dm/device-internal.h>
@@ -136,17 +139,28 @@ static int do_spi_flash_probe(int argc, char * const argv[])
 
 	flash = dev_get_uclass_priv(new);
 #else
+#ifdef CONFIG_STM_FSM_SPI_FLASH /* For ST we use FSM SPI controller
+		which is not like a "traditional" SPI controller "*/
+	new = spi_fsm_flash_probe(bus, cs, speed, mode);
+#else
 	if (flash)
 		spi_flash_free(flash);
 
 	new = spi_flash_probe(bus, cs, speed, mode);
 	flash = new;
-
+#endif
 	if (!new) {
 		printf("Failed to initialize SPI flash at %u:%u\n", bus, cs);
 		return 1;
 	}
 
+	if (flash)
+#ifdef CONFIG_STM_FSM_SPI_FLASH /* For ST we use FSM SPI controller
+		which is not like a "traditional" SPI controller "*/
+		spi_fsm_flash_free(flash);
+#else
+		spi_flash_free(flash);
+#endif
 	flash = new;
 #endif
 

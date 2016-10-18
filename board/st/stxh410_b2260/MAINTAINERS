@@ -1,0 +1,8 @@
+STXH410_B2260 BOARD
+M:	Sachin Verma <sachin.verma@st.com>
+M:	Imran Khan <imran.khan@st.com>
+S:	Maintained
+F:	board/st/stxh410_b2260/
+F:	include/configs/stxh410_b2260.h
+F:	configs/st_b2260_stxh410_sd_defconfig
+
