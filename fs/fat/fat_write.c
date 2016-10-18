@@ -583,10 +583,26 @@ set_cluster(fsdata *mydata, __u32 clustnum, __u8 *buffer,
 		}
 	} else if (size >= mydata->sect_size) {
 		idx = size / mydata->sect_size;
-		ret = disk_write(startsect, idx, buffer);
-		if (ret != idx) {
-			debug("Error writing data (got %d)\n", ret);
-			return -1;
+		if (idx == 2) {
+			/* fix a write issue observed in case of 2 blocks on
+			 * MMC card, on stih410 b2120 and b2260 platforms */
+			ret = disk_write(startsect, 1, buffer);
+			if (ret != 1) {
+				debug("Error writing data (got %d)\n", ret);
+				return -1;
+			}
+			ret = disk_write(startsect + 1, 1, (buffer + mydata->sect_size) );
+			if (ret != 1) {
+				debug("Error writing data (got %d)\n", ret);
+				return -1;
+			}
+		}
+		else {
+			ret = disk_write(startsect, idx, buffer);
+			if (ret != idx) {
+				debug("Error writing data (got %d)\n", ret);
+				return -1;
+			}
 		}
 
 		startsect += idx;
