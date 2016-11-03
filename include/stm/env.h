@@ -10,7 +10,6 @@
 #if defined(CONFIG_SYS_BOOT_FROM_SDUSB)
 #       define CONFIG_ENV_IS_NOWHERE            /* ENV is stored in volatile RAM */
 #       define CONFIG_ENV_SIZE		0x4000
-#       define CONFIG_BOOTDELAY         3
 #       if defined(CONFIG_TARGET_B2260_STXH410)
 #           define CONFIG_BOOTCOMMAND		"\\\n"	\
 		"setenv load_env_addr 0x40000000;"		"\\\n" \
