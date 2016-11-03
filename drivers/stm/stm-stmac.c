@@ -1645,7 +1645,7 @@ extern int stmac_eth_register(
 
 #if defined(CONFIG_MII) || defined(CONFIG_CMD_MII)
 	/* finally, add support for MII */
-//	miiphy_register(dev->name, stmac_miiphy_read, stmac_miiphy_write);
+	miiphy_register(dev->name, stmac_miiphy_read, stmac_miiphy_write);
 #endif	/* CONFIG_MII || CONFIG_CMD_MII */
 
 	return 0;
