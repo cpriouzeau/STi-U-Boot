@@ -5,13 +5,13 @@
  * SPDX-License-Identifier:     GPL-2.0+
  *
  */
-#define CONFIG_ENV_SIZE_REQUIRED        0x4000  /* 16 KiB of environment data required */
+#define CONFIG_ENV_SIZE_REQUIRED	0x4000  /* 16 KiB of environment data required */
 
 #if defined(CONFIG_SYS_BOOT_FROM_SDUSB)
-#       define CONFIG_ENV_IS_NOWHERE            /* ENV is stored in volatile RAM */
+#       define CONFIG_ENV_IS_NOWHERE	    /* ENV is stored in volatile RAM */
 #       define CONFIG_ENV_SIZE		0x4000
 #       if defined(CONFIG_TARGET_B2260_STXH410)
-#           define CONFIG_BOOTCOMMAND		"\\\n"	\
+#	   define CONFIG_BOOTCOMMAND		"\\\n"	\
 		"setenv load_env_addr 0x40000000;"		"\\\n" \
 		"setenv env_import_1 '"		"\\\n" \
 		"  if fatls mmc 0:1; then "		"\\\n" \
@@ -25,7 +25,7 @@
 		"    boot;"		"\\\n" \
 		"  else run env_import_2;"		"\\\n" \
 		"  fi;';"		"\\\n" \
-	        "setenv env_import_2 '"		"\\\n" \
+		"setenv env_import_2 '"		"\\\n" \
 		"  usb start;"		"\\\n" \
 		"  if fatls usb 0; then "		"\\\n" \
 		"    if fatsize usb 0 uenv_usb_$board.txt; then "		"\\\n" \
@@ -49,7 +49,7 @@
 #       define CONFIG_CMD_FS_GENERIC
 #       define CONFIG_SUPPORT_VFAT
 #else
-#       define CONFIG_ENV_IS_NOWHERE            /* ENV is stored in volatile RAM */
-#       undef  CONFIG_CMD_SAVEENV               /* no need for "saveenv" */
+#       define CONFIG_ENV_IS_NOWHERE	    /* ENV is stored in volatile RAM */
+#       undef  CONFIG_CMD_SAVEENV	       /* no need for "saveenv" */
 #endif
 
