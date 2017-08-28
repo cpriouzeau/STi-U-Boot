@@ -41,6 +41,8 @@
 
 #define CONFIG_STM_FSM_SPI_FLASH
 
+#define CONFIG_SYS_BOOTM_LEN        (64 << 20)	/* Increase max gunzip size */
+
 #define BOARD b2260
 
 #define CONFIG_CMD_I2C
