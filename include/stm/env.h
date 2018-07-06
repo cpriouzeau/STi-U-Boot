@@ -19,7 +19,6 @@
 				"fatload mmc 0:1 $load_env_addr uenv_sd_$board.txt;" \
 			"else " \
 				"fatload mmc 0:1 $load_env_addr /$board/uEnv_sd.txt;" \
-				"fatwrite mmc 0:1 $load_env_addr uenv_sd_$board.txt \${filesize};" \
 			"fi;" \
 			"env import -t $load_env_addr $filesize;" \
 			"boot;" \
@@ -32,7 +31,6 @@
 				"fatload usb 0 $load_env_addr uenv_usb_$board.txt;" \
 			"else " \
 				"fatload usb 0 $load_env_addr /$board/uEnv_usb.txt;" \
-				"fatwrite usb 0 $load_env_addr uenv_usb_$board.txt \${filesize};" \
 			"fi;" \
 			"env import -t $load_env_addr $filesize;" \
 			"boot;" \
